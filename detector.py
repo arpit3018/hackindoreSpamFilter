@@ -1,27 +1,25 @@
-import cPickle as c
+import _pickle as c
 import os
 from sklearn import *
 from collections import Counter
 
 
 def load(clf_file):
-    with open(clf_file) as fp:
+    with open(clf_file,'rb') as fp:
         clf = c.load(fp)
     return clf
 
 
 def make_dict():
-    direc = "emails/"
+    direc = "msg/"
     files = os.listdir(direc)
-    emails = [direc + email for email in files]
+    message = [direc + msg for msg in files]
     words = []
-    c = len(emails)
-
-    for email in emails:
-        f = open(email)
+    c = len(message)
+    for msg in message:
+        f = open(msg,"r",encoding='utf-8', errors='ignore')
         blob = f.read()
         words += blob.split(" ")
-        print c
         c -= 1
 
     for i in range(len(words)):
@@ -39,10 +37,10 @@ d = make_dict()
 
 while True:
     features = []
-    inp = raw_input(">").split()
+    inp = input(">").split()
     if inp[0] == "exit":
         break
     for word in d:
         features.append(inp.count(word[0]))
     res = clf.predict([features])
-    print ["Not Spam", "Spam!"][res[0]]
+    print(["Not Spam", "Spam!"][res[0]])
